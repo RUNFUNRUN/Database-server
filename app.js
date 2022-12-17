@@ -32,26 +32,7 @@ con.connect(function (err) {
     console.log('Connected');
 });
 
-app.get('/test', (req, res) => {
-    const sql = "select * from users"
-    con.query(sql, (err, rows, fields) => {
-        if (err) throw err;
-        console.log(rows);
-        res.send(rows);
-    });
-});
-
-app.get('/serch-id', (req, res) => {
-    const id = req.query.id;
-    const sql = "select * from users where id = ?"
-    con.query(sql, [id], (err, rows, fields) => {
-        if (err) throw err;
-        console.log(rows);
-        res.send(rows);
-    });
-});
-
-app.get('/getLogin', (req, res) => {
+app.get('/login', (req, res) => {
     const id = req.query.id;
     const password = req.query.password;
     const sql = "select exists(select * from users where id = ? and password = ?) as check_user"
@@ -63,5 +44,25 @@ app.get('/getLogin', (req, res) => {
         } else {
             res.send(false);
         }
+    });
+});
+
+app.post('/create-account', (req, res) => {
+    const id = req.query.id;
+    const password = req.query.password;
+    const checkSql = "select exists(select * from users where id = ?) as check_user"
+    const createSql = "insert into users (id, password) values (?, ?)";
+    con.query(checkSql, [id, password], (err, rows, fields) => {
+        if (err) throw err;
+        console.log(rows[0].check_user);
+        if (rows[0].check_user == 1) {
+            res.send(false);
+        } else {
+            con.query(createSql, [id, password], (err, rows, fields) => {
+                if (err) throw err;
+                console.log(rows);
+                res.send(true);
+            });
+        };
     });
 });
