@@ -66,3 +66,52 @@ app.post('/create-account', (req, res) => {
         };
     });
 });
+
+app.post('/create-issue', (req, res) => {
+    const id = req.query.id;
+    const title = req.query.title;
+    const discription = req.query.discription;
+    const startline = req.query.startline;
+    const deadline = req.query.deadline;
+    const state = 0;
+    const sql = "insert into issues (id, title, discription, startline, deadline, state) values (?, ?, ?, ?, ?, ?)";
+    con.query(sql, [id, title, discription, startline, deadline, state], (err, rows, fields) => {
+        if (err) throw err;
+        console.log(rows);
+        res.send(true);
+    });
+});
+
+app.post('/editIssue', (req, res) => {
+    const id = req.query.id;
+    const title = req.query.title;
+    const discription = req.query.discription;
+    const deadline = req.query.deadline;
+    const state = req.query.state;
+    const sql = "update issues set title = ?, discription = ?, deadline = ?, state = ? where id = ?";
+    con.query(sql, [title, discription, deadline, state, id], (err, rows, fields) => {
+        if (err) throw err;
+        console.log(rows);
+        res.send(true);
+    });
+});
+
+app.post('/deleteIssue', (req, res) => {
+    const id = req.query.id;
+    const sql = "delete from issues where id = ?";
+    con.query(sql, [id], (err, rows, fields) => {
+        if (err) throw err;
+        console.log(rows);
+        res.send(true);
+    });
+});
+
+app.post('/issueList', (req, res) => {
+    const id = req.query.id;
+    const sql = "select * from issues where id = ?";
+    con.query(sql, [id], (err, rows, fields) => {
+        if (err) throw err;
+        console.log(rows);
+        res.send(rows);
+    });
+});

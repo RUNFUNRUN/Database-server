@@ -1,0 +1,15 @@
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+    id VARCHAR(20) NOT NULL PRIMARY KEY,
+    password VARCHAR(20) NOT NULL
+);
+
+DROP TABLE IF EXISTS issues;
+CREATE TABLE issues (
+    id VARCHAR(20) NOT NULL PRIMARY KEY REFERENCES users(id),
+    title VARCHAR(50) NOT NULL,
+    discription VARCHAR(500) NOT NULL,
+    startline DATE NOT NULL,
+    deadline DATE NOT NULL,
+    state INTEGER NOT NULL
+);
