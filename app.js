@@ -82,7 +82,7 @@ app.post('/create-issue', (req, res) => {
     });
 });
 
-app.post('/editIssue', (req, res) => {
+app.put('/editIssue', (req, res) => {
     const id = req.query.id;
     const title = req.query.title;
     const discription = req.query.discription;
@@ -96,7 +96,7 @@ app.post('/editIssue', (req, res) => {
     });
 });
 
-app.post('/deleteIssue', (req, res) => {
+app.delete('/deleteIssue', (req, res) => {
     const id = req.query.id;
     const sql = "delete from issues where id = ?";
     con.query(sql, [id], (err, rows, fields) => {
@@ -106,7 +106,7 @@ app.post('/deleteIssue', (req, res) => {
     });
 });
 
-app.post('/issueList', (req, res) => {
+app.get('/issueList', (req, res) => {
     const id = req.query.id;
     const sql = "select * from issues where id = ?";
     con.query(sql, [id], (err, rows, fields) => {
