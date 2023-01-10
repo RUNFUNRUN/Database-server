@@ -6,7 +6,7 @@ CREATE TABLE users (
 
 DROP TABLE IF EXISTS issues;
 CREATE TABLE issues (
-    id VARCHAR(20) NOT NULL PRIMARY KEY REFERENCES users(id),
+    userId VARCHAR(20) NOT NULL PRIMARY KEY REFERENCES users(id),
     title VARCHAR(50) NOT NULL UNIQUE,
     discription VARCHAR(500) NOT NULL,
     startline DATE NOT NULL,
