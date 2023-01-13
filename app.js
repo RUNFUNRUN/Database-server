@@ -33,12 +33,11 @@ con.connect(function (err) {
 });
 
 app.get('/login', (req, res) => {
-    const id = req.query.id;
+    const userId = req.query.userId;
     const password = req.query.password;
-    const sql = "select exists(select * from users where id = ? and password = ?) as check_user"
-    con.query(sql, [id, password], (err, rows, fields) => {
+    const sql = "select exists(select * from users where userId = ? and password = ?) as check_user"
+    con.query(sql, [userId, password], (err, rows, fields) => {
         if (err) throw err;
-        console.log(rows[0].check_user);
         if (rows[0].check_user == 1) {
             res.send(true);
         } else {
@@ -48,17 +47,17 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/create-account', (req, res) => {
-    const id = req.query.id;
+    const userId = req.query.userId;
     const password = req.query.password;
-    const checkSql = "select exists(select * from users where id = ?) as check_user"
-    const createSql = "insert into users (id, password) values (?, ?)";
-    con.query(checkSql, [id, password], (err, rows, fields) => {
+    const checkSql = "select exists(select * from users where userId = ?) as check_user"
+    const createSql = "insert into users (userId, password) values (?, ?)";
+    con.query(checkSql, [userId, password], (err, rows, fields) => {
         if (err) throw err;
         console.log(rows[0].check_user);
         if (rows[0].check_user == 1) {
             res.send(false);
         } else {
-            con.query(createSql, [id, password], (err, rows, fields) => {
+            con.query(createSql, [userId, password], (err, rows, fields) => {
                 if (err) throw err;
                 console.log(rows);
                 res.send(true);
@@ -68,28 +67,26 @@ app.post('/create-account', (req, res) => {
 });
 
 app.post('/create-issue', (req, res) => {
-    const id = req.query.id;
+    const userId = req.query.userId;
     const title = req.query.title;
-    const discription = req.query.discription;
+    const description = req.query.description;
     const startline = req.query.startline;
     const deadline = req.query.deadline;
     const state = 0;
-    const sql = "insert into issues (id, title, discription, startline, deadline, state) values (?, ?, ?, ?, ?, ?)";
-    con.query(sql, [id, title, discription, startline, deadline, state], (err, rows, fields) => {
+    const sql = "insert into issues (userId, title, description, startline, deadline, state) values (?, ?, ?, ?, ?, ?)";
+    con.query(sql, [userId, title, description, startline, deadline, state], (err, rows, fields) => {
         if (err) throw err;
         console.log(rows);
         res.send(true);
     });
 });
 
-app.put('/edit-issue', (req, res) => {
-    const id = req.query.id;
+app.put('/edit-issue-state', (req, res) => {
+    const userId = req.query.userId;
     const title = req.query.title;
-    const discription = req.query.discription;
-    const deadline = req.query.deadline;
     const state = req.query.state;
-    const sql = "update issues set title = ?, discription = ?, deadline = ?, state = ? where id = ?";
-    con.query(sql, [title, discription, deadline, state, id], (err, rows, fields) => {
+    const sql = "update issues set state = ? where userId = ? and title = ?";
+    con.query(sql, [state, userId, title], (err, rows, fields) => {
         if (err) throw err;
         console.log(rows);
         res.send(true);
@@ -97,9 +94,10 @@ app.put('/edit-issue', (req, res) => {
 });
 
 app.delete('/delete-issue', (req, res) => {
-    const id = req.query.id;
-    const sql = "delete from issues where id = ?";
-    con.query(sql, [id], (err, rows, fields) => {
+    const userId = req.query.userId;
+    const title = req.query.title;
+    const sql = "delete from issues where userId = ? and title = ?";
+    con.query(sql, [userId, title], (err, rows, fields) => {
         if (err) throw err;
         console.log(rows);
         res.send(true);
@@ -107,10 +105,11 @@ app.delete('/delete-issue', (req, res) => {
 });
 
 app.get('/issues-list', (req, res) => {
-    const id = req.query.id;
-    const sql = "select * from issues where id = ?";
-    con.query(sql, [id], (err, rows, fields) => {
+    const userId = req.query.userId;
+    const sql = "select * from issues where userId = ?";
+    con.query(sql, [userId], (err, rows, fields) => {
         if (err) throw err;
+        console.log(userId);
         console.log(rows);
         res.send(rows);
     });
