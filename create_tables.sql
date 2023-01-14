@@ -8,11 +8,12 @@ CREATE TABLE users (
 );
 
 CREATE TABLE issues (
+    title VARCHAR(50) NOT NULL,
     userId VARCHAR(20) NOT NULL,
-    title VARCHAR(50) NOT NULL UNIQUE,
     description VARCHAR(500) NOT NULL,
     startline DATE NOT NULL,
     deadline DATE NOT NULL,
     state INTEGER NOT NULL,
+    PRIMARY KEY (title),
     FOREIGN KEY (userId) REFERENCES users(userId)
 );
